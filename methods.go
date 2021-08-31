@@ -13,10 +13,10 @@ type Client interface {
 	GetGlobalAchievementPercentagesForApp(int)
 	GetPlayerSummaries(int)
 	GetFriendList(int)
-	GetPlayerAchievements(int int)
-	GetUserStatsForGame(int int)
+	GetPlayerAchievements(int, int)
+	GetUserStatsForGame(int, int)
 	GetOwnedGames(int)
-	GetRecentlyPlayedGames()
+	GetRecentlyPlayedGames(int, ...int)
 }
 
 // create a new client instance
@@ -120,6 +120,8 @@ func (s *SteamClient) GetRecentlyPlayedGames(steamID int, count ...int) (interfa
 	buf.WriteString(fmt.Sprintf("%s/IPlayerService/GetRecentlyPlayedGames/v0001/?key=%s&steamid=%d", s.baseUrl, s.apiKey, steamID))
 	if len(count) != 0 {
 		buf.WriteString(fmt.Sprintf("&count=%d", count[0]))
+	} else {
+		buf.WriteString("&count=10")
 	}
 
 	data, err := makeRequest(buf.String())
